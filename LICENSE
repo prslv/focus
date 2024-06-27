@@ -1,4 +1,3 @@
-/*
 MIT License with Additional Restrictions and Disclaimer
 
 Copyright (c) 2024 Preslav Kunov, repuddle.com
@@ -22,15 +21,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/
-
-// Listen for messages from content scripts
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message.action === "closeCurrentTab") {
-    // Close the current tab
-    chrome.tabs.remove(sender.tab.id, function () {
-      sendResponse({ success: true });
-    });
-    return true;
-  }
-});
