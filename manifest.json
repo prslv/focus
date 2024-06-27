@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Focus",
+  "name": "Focus - eliminate distractions",
   "version": "1.0",
   "description": "Block distracting websites to help you focus.",
   "permissions": [
