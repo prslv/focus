@@ -90,8 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     addCurrentSiteButton.addEventListener('click', () => {
-        chrome.storage.local.get('focusMode', (data) => {
+        chrome.storage.local.get(['focusMode', 'blockMode'], (data) => {
             const newFocusMode = data.focusMode;
+            const blockMode = data.blockMode;
             // console.log(data);
             let returnedUrl = '';
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -102,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (newFocusMode) {
                             chrome.tabs.query({}, (tabs) => {
                                 tabs.forEach((tab) => {
-                                    chrome.tabs.sendMessage(tab.id, { action: "addUrl", focusMode: newFocusMode, site: returnedUrl }, (response) => {
+                                    chrome.tabs.sendMessage(tab.id, { action: "addUrl", mode: blockMode, focusMode: newFocusMode, site: returnedUrl }, (response) => {
                                         if (chrome.runtime.lastError) {
                                             // console.error('Error sending message: ' + chrome.runtime.lastError.message);
                                         }
@@ -118,8 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-
-
 
     function addNewSite(newSite) {
         chrome.storage.local.get('blockedSites', (data) => {
@@ -196,12 +195,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to apply block mode
     function applyBlockMode(mode) {
-        chrome.tabs.query({}, (tabs) => {
-            tabs.forEach((tab) => {
-                chrome.tabs.sendMessage(tab.id, { action: 'applyBlockMode', mode: mode }, (response) => {
-                    if (chrome.runtime.lastError) {
-                        // console.error('Error: ' + chrome.runtime.lastError.message);
-                    }
+        chrome.storage.local.get('focusMode', (data) => {
+            const newFocusMode = data.focusMode;
+            chrome.tabs.query({}, (tabs) => {
+                tabs.forEach((tab) => {
+                    chrome.tabs.sendMessage(tab.id, { action: 'applyBlockMode', mode: mode, focusMode: newFocusMode }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            // console.error('Error: ' + chrome.runtime.lastError.message);
+                        }
+                    });
                 });
             });
         });

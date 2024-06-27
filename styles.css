@@ -196,7 +196,7 @@ input:focus {
 }
 
 .savedUrlsDiv ul {
-    max-height: 190px;
+    max-height: 155px;
     overflow-y: scroll;
     margin: 0;
 }

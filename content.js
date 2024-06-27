@@ -41,19 +41,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'removeUrl') {
         const newFocusMode = message.focusMode;
         const receivedUrl = message.site;
+        const mode = message.mode;
         console.log(newFocusMode);
         console.log(receivedUrl);
         if (newFocusMode && receivedUrl === currentUrl) {
-            hideOverlay();
+            hideOverlay(mode);
         }
     }
     if (message.action === 'addUrl') {
         const newFocusMode = message.focusMode;
         const receivedUrl = message.site;
+        const mode = message.mode;
         console.log(newFocusMode);
         console.log(receivedUrl);
         if (newFocusMode && receivedUrl === currentUrl) {
-            showOverlay(message.mode);
+            showOverlay(mode);
         }
     }
 });
@@ -66,14 +68,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'applyBlockMode') {
         const mode = message.mode;
-        chrome.storage.local.get(['blockedSites', 'blockMode'], (data) => {
+        const newFocusMode = message.focusMode;
+        chrome.storage.local.get('blockedSites', (data) => {
             const blockedSites = data.blockedSites || [];
             const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '');
 
             if (newFocusMode && blockedSites.includes(currentUrl)) {
                 showOverlay(mode);
-            } else if (!newFocusMode && blockedSites.includes(currentUrl)) {
-                hideOverlay();
+                console.log('AAAAAAAAAAAAAA');
             }
         });
     }
