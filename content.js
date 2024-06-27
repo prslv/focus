@@ -29,7 +29,7 @@ let overlayDisplayed = false;
 chrome.storage.local.get(['focusMode', 'blockedSites', 'blockMode'], (data) => {
     const { focusMode, blockedSites, blockMode } = data;
     if (focusMode && blockedSites) {
-        const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '');
+        const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '').toLowerCase();
         if (blockedSites.includes(currentUrl)) {
             showOverlay(blockMode);
         } else {
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.storage.local.get(['blockedSites', 'blockMode'], (data) => {
             const blockedSites = data.blockedSites || [];
             const blockMode = data.blockMode;
-            const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '');
+            const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '').toLowerCase();
 
             if (newFocusMode && blockedSites.includes(currentUrl)) {
                 showOverlay(blockMode);
@@ -59,7 +59,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '');
+    const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '').toLowerCase();
     if (message.action === 'getCurrentUrl') {
         console.log(currentUrl);
         sendResponse({ url: currentUrl });
@@ -98,7 +98,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const newFocusMode = message.focusMode;
         chrome.storage.local.get('blockedSites', (data) => {
             const blockedSites = data.blockedSites || [];
-            const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '');
+            const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '').toLowerCase();
 
             if (newFocusMode && blockedSites.includes(currentUrl)) {
                 showOverlay(mode);

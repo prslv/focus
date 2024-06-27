@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // FUNCTIONS
     function handleInputUrls(input, addbtn) {
-        const newSite = input.value.trim();
+        const newSite = input.value.trim().toLowerCase();
         if (newSite) {
             addNewSite(newSite);
             addbtn.classList.add('hidden');
