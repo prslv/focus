@@ -3,12 +3,13 @@
 }
 
 ::-webkit-scrollbar {
-    display: none;
+    opacity: 0;
     width: 3px;
 }
 
 *:hover::-webkit-scrollbar {
-    display: unset;
+    opacity: 1;
+    margin-left: -3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -238,7 +239,10 @@ input:focus {
     pointer-events: none;
     max-width: calc(100% - 30px);
 }
-
+.noUrlsAdded {
+    text-align: center;
+    padding: 10px 0;
+}
 #blockedSites li:hover {
     /* background: #ffffff0d; */
     background: linear-gradient(45deg, #ff000012, #ffffff00);

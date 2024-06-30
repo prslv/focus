@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
             chrome.storage.local.set({ blockedSites: [] });
         }
         updateUI(data.focusMode, data.blockedSites);
-        console.log(data.blockMode);
 
+        // console.log(data.blockMode);
         // console.log(data.focusMode);
         // console.log(data.blockedSites);
     });
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
                     if (chrome.runtime.lastError) {
-                        console.error('Error sending message: ' + chrome.runtime.lastError.message);
+                        // console.error('Error sending message: ' + chrome.runtime.lastError.message);
                     }
                 });
             });
@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                             // console.error('Error sending message: ' + chrome.runtime.lastError.message);
                                         }
                                     });
-                                    // console.log(siteToRemove);
                                 });
                             });
                         }
@@ -218,6 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     function applyBlockMode(mode) {
         chrome.storage.local.get('focusMode', (data) => {
             const newFocusMode = data.focusMode;
@@ -256,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('body-on');
             }
         }
+
         if (blockedSites !== null) {
             blockedSitesList.innerHTML = '';
             blockedSites.forEach((site) => {
@@ -270,6 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(p);
                 blockedSitesList.prepend(li);
             });
+        }
+        if (Array.isArray(blockedSites) && blockedSites.length === 0) {
+            blockedSitesList.innerHTML = '<div class="noUrlsAdded">List is empty.</div>';
         }
     }
     //
