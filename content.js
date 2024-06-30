@@ -36,13 +36,13 @@ chrome.storage.local.get(['focusMode', 'blockedSites', 'blockMode'], (data) => {
             hideOverlay();
         }
     } else {
-        hideOverlay(); // If focusMode is false or blockedSites is not yet initialized
+        hideOverlay();
     }
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'toggleFocusMode') {
-        console.log('HELLO');
+        // console.log('HELLO');
         const newFocusMode = message.focusMode;
         chrome.storage.local.get(['blockedSites', 'blockMode'], (data) => {
             const blockedSites = data.blockedSites || [];
@@ -61,7 +61,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const currentUrl = (new URL(window.location.href)).hostname.replace(/^www\./, '').toLowerCase();
     if (message.action === 'getCurrentUrl') {
-        console.log(currentUrl);
+        // console.log(currentUrl);
         sendResponse({ url: currentUrl });
     }
     if (message.action === 'removeUrl') {
@@ -78,8 +78,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const newFocusMode = message.focusMode;
         const receivedUrl = message.site;
         const mode = message.mode;
-        console.log(newFocusMode);
-        console.log(receivedUrl);
+        // console.log(newFocusMode);
+        // console.log(receivedUrl);
         if (newFocusMode && receivedUrl === currentUrl) {
             showOverlay(mode);
         }
@@ -89,6 +89,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'refreshTab' && overlayDisplayed) {
         location.reload(); // Reload the tab if overlay is displayed
+        unmuteTabs(); // unmute muted tabs
     }
 });
 
@@ -102,7 +103,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             if (newFocusMode && blockedSites.includes(currentUrl)) {
                 showOverlay(mode);
-                console.log('AAAAAAAAAAAAAA');
             }
         });
     }
@@ -113,6 +113,7 @@ function showOverlay(mode) {
     switch (mode) {
         case 1:
             displayOverlay();
+            muteTabs();
             break;
         case 2:
             closeTabs();
@@ -155,13 +156,20 @@ function displayOverlay() {
 }
 
 function closeTabs() {
-    chrome.runtime.sendMessage({ action: 'closeCurrentTab' }, function (response) {
-        if (response && response.success) {
-            console.log("Tab closed successfully.");
-        } else {
-            console.error("Failed to close the tab.");
-        }
-    });
+    chrome.runtime.sendMessage({ action: 'closeCurrentTab' });
+    // , function (response) {
+    //     if (response && response.success) {
+    //         console.log("Tab closed successfully.");
+    //     } else {
+    //         console.error("Failed to close the tab.");
+    //     }
+    // }
+}
+function muteTabs() {
+    chrome.runtime.sendMessage({ action: 'muteCurrentTab' });
+}
+function unmuteTabs() {
+    chrome.runtime.sendMessage({ action: 'unmuteCurrentTab' });
 }
 
 function hideOverlay() {
@@ -170,6 +178,7 @@ function hideOverlay() {
         const overlay = document.getElementById('focus-overlay');
         if (overlay) {
             location.reload();
+            unmuteTabs(); // unmute muted tabs
         }
     }
 }

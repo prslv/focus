@@ -26,11 +26,21 @@ SOFTWARE.
 
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+  // close tabs
   if (message.action === "closeCurrentTab") {
-    // Close the current tab
     chrome.tabs.remove(sender.tab.id, function () {
       sendResponse({ success: true });
     });
     return true;
+  }
+
+  // mute tabs
+  if (message.action === "muteCurrentTab") {
+    chrome.tabs.update(sender.tab.id, { muted: true });
+  }
+  
+  // unmute tabs
+  if (message.action === "unmuteCurrentTab") {
+    chrome.tabs.update(sender.tab.id, { muted: false });
   }
 });
