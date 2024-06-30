@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleFocusButton.classList.remove('off');
                 toggleFocusButton.classList.add('on');
                 statusSpan.textContent = 'ON';
-                document.body.classList.add('body-on');
+                // document.body.classList.add('body-on');
             } else {
                 // If focusMode is false, set classes and text for OFF state
                 innerBtn.classList.remove('true');
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleFocusButton.classList.remove('on');
                 toggleFocusButton.classList.add('off');
                 statusSpan.textContent = 'OFF';
-                document.body.classList.remove('body-on');
+                // document.body.classList.remove('body-on');
             }
         }
 
